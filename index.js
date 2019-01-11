@@ -2,9 +2,19 @@
 //
 
 const intervalTime = 1000;   // Test interval time in miliseconds.
-const host = "10.2.1.35";    // Host address
-const io = "1";              // IO Port
-const prontoHex = "00000073000000210060002000100010001000100010002000100020003000200010001000100010001000100010001000100010001000100010001000100010001000100010001000200010001000100010001000100020001000100010001000100010001000100020002000100010001000100010001000100010001000100020002000200010001009DD";
+
+// HDA test
+const url = "http://10.2.1.35/api/command/irpass/1/";    // Host address
+const httpPost = true;
+const postData = {"irdata":"00000073000000210060002000100010001000100010002000100020003000200010001000100010001000100010001000100010001000100010001000100010001000100010001000200010001000100010001000100020001000100010001000100010001000100020002000100010001000100010001000100010001000100020002000200010001009DD"}
+
+// NEEO Test
+/*
+const url = "http://10.2.1.63:3000/v1/projects/home/rooms/6332151776837369856/devices/6482149828842225664/macros/6482149829458788353/trigger";    // Host address
+const httpPost = false;
+const postData = ""
+*/
+
 
 //
 // End of Settings.
@@ -21,20 +31,16 @@ let count = 0;
 // Functions //
 function sendCommand(){
   p1();
-  apiPost(host, `command/irpass/${io}/`, `{"irdata":"${prontoHex}"}`);
-}
-
-function apiPost(mHubHost, api, data) {
-  return http
-    .post(`http://${mHubHost}/api/${api}`, data)
-    .then(r => {
-      try {
-        return JSON.parse(r.data).data;
-      } catch (e) {}
-    })
-    .catch(e => {
-      console.log(e);
-    });
+  if (httpPost){
+    http
+    .post(url, postData)
+    .then(r => { })
+    .catch(e => { });
+  } else {
+    http(url)
+    .then(r => { })
+    .catch(e => { });
+  }
 }
 
 keypress(process.stdin);
@@ -69,10 +75,11 @@ function calcTime(ta, tb) {
 }
 
 // Test Code //
-
+console.log(``);
+console.log(``);
 console.log(` Performance testing.`);
 console.log(``);
-console.log(`Every ${intervalTime / 1000} second(s) a command will be sent to ${host}`);
+console.log(`Every ${intervalTime / 1000} second(s) a command will be sent to ${url}`);
 console.log(` T1: Is the moment the request is sent.`);
 console.log(` T2: Is the moment a key press is received.`);
 console.log(``);
